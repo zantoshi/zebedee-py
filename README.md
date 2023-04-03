@@ -67,7 +67,7 @@ payment_details = project_a.send_keysend_payment(public_key, amount_msats, metad
 print(payment_details)
 
 # Pay an invoice with the specified parameters
-invoice = 'lnbc10n1pjz5cpmpp5zege28nae7amzdx58d73tfqe74an4svsprmn5dwnrglce8fxnh7qdqhtfz5y32yg4zjqsmgv9exwegcqzpgxqzfvsp5z7p3su906fnpzch95rdtjmhk2kezf35d57xnhy2rvawnrhwnkm8s9qyyssqvh0xpqegwans8nwns7vcyktqucyzrh45mx2z3cmh7j2euv8srwarxjmkn5y9x4pnpcty5k0tce8y6lj9mjcqsnv8kevt8w5cjy3mg7gp6k2ntt'
+invoice = 'your_invoice_here'
 description = 'Test Invoice Payment'
 internal_id = '123'
 payment_details = project_a.pay_invoice(invoice, description, internal_id)
@@ -102,7 +102,7 @@ gamertag = project_a.get_gamertag_from_user_id(user_id=user_id)
 
 # fetch a charge for a gamertag
 charge_response = project_a.fetch_charge_from_gamertag(
-    gamertag="example", amount_msats=1000, description="charge description", internal_id="internal_id"
+    gamertag="santos", amount_msats=1000, description="charge description", internal_id="internal_id"
 )
 
 # check if an IP is in a supported region
@@ -121,5 +121,5 @@ amount_msats = project_a.convert_sats_to_msats(amount_sats=1000)
 amount_sats = project_a.convert_msats_to_sats(amount_msats=1)
 
 # transfer funds between ZBD wallets
-transfer_response = project_a.transfer_zbd_funds(amount_msats=1000, recevier_wallet_id="1ef20f95-4779-4ae6-a6c2-0ad34634e464")
+transfer_response = project_a.transfer_zbd_funds(amount_msats=1000, recevier_wallet_id="receiver_wallet_id")
 ```
