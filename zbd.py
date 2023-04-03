@@ -12,7 +12,7 @@ class ZBD:
         The goal of this library is to increase at which developers are able to deliver lightning payment solutions.
     '''
 
-    def __init__(self, apikey, callback_url):
+    def __init__(self, apikey, callback_url = None):
         self.apikey = apikey
         self.callback_url = callback_url
 
@@ -25,7 +25,7 @@ class ZBD:
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
         return requests.get(URL, headers=heads).json()["data"]
         
-    def create_charge(self, amount_of_seconds_to_expire_after, amount_msats, description, internal_id):
+    def create_charge(self, amount_of_seconds_to_expire_after, amount_msats, description = None, internal_id = None):
         URL = 'https://api.zebedee.io/v0/charges'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
