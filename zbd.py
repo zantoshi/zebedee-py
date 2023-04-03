@@ -1,4 +1,4 @@
-import requests, json
+import requests, json, math
 
 class ZBD:
 
@@ -15,6 +15,9 @@ class ZBD:
     def __init__(self, apikey, callback_url = None):
         self.apikey = apikey
         self.callback_url = callback_url
+
+    def __str__(self):
+        return "ZBD Object"
 
     '''
         Charge Actions
@@ -50,12 +53,12 @@ class ZBD:
         Static Charge Actions
     '''
 
-    def create_static_charge(self, allowedSlots, min_amount_msats, max_amount_msats, description, internal_id, success_message):
+    def create_static_charge(self,  min_amount_msats, max_amount_msats, description, internal_id, success_message, allowed_slots=None):
         URL = 'https://api.zebedee.io/v0/static-charges'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
         payload = json.dumps({
-            "allowedSlots": allowedSlots,
+            "allowedSlots": allowed_slots,
             "minAmount": str(min_amount_msats),
             "maxAmount": str(max_amount_msats),
             "description": description,
@@ -67,7 +70,7 @@ class ZBD:
         return requests.post(URL, headers=heads, data=payload).json()["data"]
         
 
-    def update_static_charge_details(self, min_amount_msats, max_amount_msats, description, success_message, allowed_slots = None):
+    def update_static_charge_details(self, id, min_amount_msats, max_amount_msats, description, success_message, allowed_slots = None):
         url = f"https://api.zebedee.io/v0/static-charges/{id}"
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
         payload = {
@@ -217,12 +220,12 @@ class ZBD:
     def get_user_id_from_gamertag(self, gamertag):
         URL = f'https://api.zebedee.io/v0/user-id/gamertag/{gamertag}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        return requests.get(URL, headers=heads).json()["data"]
+        return requests.get(URL, headers=heads).json()["data"]["id"]
 
     def get_gamertag_from_user_id(self, user_id):
         URL = f'https://api.zebedee.io/v0/gamertag/user-id/{user_id}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        return requests.get(URL, headers=heads).json()["data"]
+        return requests.get(URL, headers=heads).json()["data"]["gamertag"]
 
     def fetch_charge_from_gamertag(self, gamertag, amount_msats, description, internal_id):
         URL = 'https://api.zebedee.io/v0/gamertag/charges'
@@ -257,7 +260,7 @@ class ZBD:
         return requests.get(URL, headers=heads).json()["data"]["btcUsdPrice"]
 
     def convert_sats_to_msats(self, amount_sats):
-        return int(amount_sats) / 000
+        return str(math.floor(int(amount_sats) / 1000))
 
     def convert_msats_to_sats(self, amount_msats):
         return str(amount_msats) + "000"
