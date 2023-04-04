@@ -123,3 +123,7 @@ amount_sats = project_a.convert_msats_to_sats(amount_msats=1)
 # transfer funds between ZBD wallets
 transfer_response = project_a.transfer_zbd_funds(amount_msats=1000, recevier_wallet_id="receiver_wallet_id")
 ```
+
+## best practices
+
+- use an environmental variable for each apikey before going live with this code. 
