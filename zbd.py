@@ -44,7 +44,6 @@ class ZBD:
         return requests.post(URL, headers=heads, data=payload).json()["data"]
         
     def get_charge_details(self, zbd_id):
-        # UPDATE
         URL = f'https://api.zebedee.io/v0/charges/{zbd_id}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
         return requests.get(URL, headers=heads).json()["data"]
@@ -85,7 +84,6 @@ class ZBD:
 
 
     def get_static_charge_details(self, zbd_id):
-        # UPDATE
         URL = f'https://api.zebedee.io/v0/static-charges/{zbd_id}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
         return requests.get(URL, headers=heads).json()["data"]
@@ -259,14 +257,11 @@ class ZBD:
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
         return requests.get(URL, headers=heads).json()["data"]["btcUsdPrice"]
 
-    def convert_sats_to_msats(self, amount_sats):
+    def convert_msats_to_sats(self, amount_sats):
         return str(math.floor(int(amount_sats) / 1000))
 
-    def convert_msats_to_sats(self, amount_msats):
+    def convert_sats_to_msats(self, amount_msats):
         return str(amount_msats) + "000"
-
-    def convert_usd_btc_to_sats(self, bitcoin_price):
-        pass
 
     def transfer_zbd_funds(self, amount_msats, recevier_wallet_id):
         URL = 'https://api.zebedee.io/v0/internal-transfer'

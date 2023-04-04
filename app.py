@@ -87,10 +87,10 @@ prod_server_ip = project_a.get_zbd_prod_server_ip()
 btc_usd_price = project_a.get_btc_usd_quote_price()
 
 # convert sats to msats
-amount_msats = project_a.convert_sats_to_msats(amount_sats=1000)
+amount_msats = project_a.convert_sats_to_msats(amount_sats=1)
 
 # convert msats to sats
-amount_sats = project_a.convert_msats_to_sats(amount_msats=1)
+amount_sats = project_a.convert_msats_to_sats(amount_msats=1000)
 
 # transfer funds between ZBD wallets
 transfer_response = project_a.transfer_zbd_funds(amount_msats=1000, recevier_wallet_id="receiver_wallet_id")
