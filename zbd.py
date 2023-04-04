@@ -31,7 +31,6 @@ class ZBD:
     def create_charge(self, amount_of_seconds_to_expire_after, amount_msats, description, internal_id = None):
         URL = 'https://api.zebedee.io/v0/charges'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        print(description)
 
         payload = json.dumps({
             "expiresIn": amount_of_seconds_to_expire_after,
