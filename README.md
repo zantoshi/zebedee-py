@@ -25,11 +25,16 @@ send_keysend_payment(public_key, amount_msats, metadata=None, tlv_records=None):
 - & much more!
 
 ## example usage
+Install the package using:
+`pip install zebedee`
+
+Now you're ready to get started!
+
 ```
-from zbd import *
+from zebedee import *
 
 # create a new ZBD object with callback URL to get updates after there is a status update.
-project_a = ZBD("your_api_key", "https://your-website.com/zbd/webhook/")
+project_a = zebedee.ZBD("your_api_key", "https://your-website.com/zbd/webhook/")
 
 # Call the get_wallet_details function to retrieve your wallet details
 wallet_details = project_a.get_wallet_details()

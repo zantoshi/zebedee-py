@@ -1,6 +1,6 @@
 import requests, json, math
 
-class ZBD:
+class Project:
 
     '''
         This is the ZEBEDEE API library for python programmers.
@@ -12,12 +12,12 @@ class ZBD:
         The goal of this library is to increase at which developers are able to deliver lightning payment solutions.
     '''
 
-    def __init__(self, apikey, callback_url = None):
+    def __init__(self, apikey, callback_url = ""):
         self.apikey = apikey
         self.callback_url = callback_url
 
     def __str__(self):
-        return "ZBD Object"
+        return "ZEBEDEE Project Object"
 
     '''
         Charge Actions
@@ -172,14 +172,21 @@ class ZBD:
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
         payload = json.dumps({
-            "lnAddress": lightning_address,
+            "lnAddress": "santos@zbd.gg",
             "amount": str(amount_msats),
+            "unit" : "msats",
             "comment": comment,
             "callbackUrl": self.callback_url,
             "internalId": internal_id
         })
+        res = requests.post(URL, headers=heads, data=payload).json()
+        try:
+            return res["data"]
+        except:
+            return res
+        
 
-        return requests.post(URL, headers=heads, data=payload).json()["data"]
+        
 
     def fetch_charge_from_lightning_address(self, lightning_address, amount_msats, description):
         URL = 'https://api.zebedee.io/v0/ln-address/fetch-charge'
@@ -255,6 +262,11 @@ class ZBD:
         URL = 'https://api.zebedee.io/v0/btcusd'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
         return requests.get(URL, headers=heads).json()["data"]["btcUsdPrice"]
+    
+    def convert_usd_to_sats(self, usd_amount):
+        btc_price = self.get_btc_usd_quote_price()
+        sats_amount = math.floor(round(int(usd_amount) / int(btc_price), 8) * 100000000)
+        return sats_amount
 
     def convert_msats_to_sats(self, amount_sats):
         return str(math.floor(int(amount_sats) / 1000))
