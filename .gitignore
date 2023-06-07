@@ -1,0 +1,5 @@
+setup.py
+.git
+build/*
+dist/*
+zebedee.egg-info/*
