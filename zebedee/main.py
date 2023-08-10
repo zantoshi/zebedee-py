@@ -17,7 +17,7 @@ class Project:
 
             return response_json["data"]
         except Exception as e:
-            raise RuntimeError(f"An error occurred: {e}, Response: {response.text}")
+            raise RuntimeError(f"An error occurred: {e}, Response: {response.message}")
 
     def get_wallet_details(self):
         URL = 'https://api.zebedee.io/v0/wallet'
