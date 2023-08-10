@@ -4,7 +4,7 @@ A python library that makes building with the ZBD API easy and fast. To sign-up 
 To get started, you'll need to create a project using using the Developer Dashboard. Once you have a project, grab the API key from the API key tab. We will now assume that you have an API Key.
 
 ## features
-The Project class has all available endpoints for the (ZBD API)[https://docs.zebedee.io/api/intro]. 
+The Project class has all available endpoints for the [ZBD API](https://docs.zebedee.io/api/intro). 
 
 ## example usage
 Install the package using:
