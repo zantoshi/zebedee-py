@@ -1,34 +1,18 @@
-# zebedee-python-lib
+# zebedee-py
 A python library that makes building with the ZBD API easy and fast. To sign-up for the ZBD API, use https://dashboard.zebedee.io .
 
 To get started, you'll need to create a project using using the Developer Dashboard. Once you have a project, grab the API key from the API key tab. We will now assume that you have an API Key.
 
 ## features
-The ZBD class has the following methods:
-
-- get_wallet_details(): retrieves details of the user's wallet
-create_charge(amount_of_seconds_to_expire_after, amount_msats, description, internal_id=None): creates a charge request with the specified parameters
-
-- get_charge_details(zbd_id): retrieves details of a charge request with the specified ID
-create_static_charge(allowedSlots, min_amount_msats, max_amount_msats, description, internal_id, success_message): creates a static charge request with the specified parameters
-
-- update_static_charge_details(min_amount_msats, max_amount_msats, description, success_message, allowed_slots=None): updates the details of a static charge request with the specified ID
-
-- get_static_charge_details(zbd_id): retrieves details of a static charge request with the specified ID
-create_withdrawal_request(amount_of_seconds_to_expire_after, amount_msats, description, internal_id): creates a withdrawal request with the specified parameters
-
-- get_withdrawal_request_details(zbd_id): retrieves details of a withdrawal request with the specified ID
-send_keysend_payment(public_key, amount_msats, metadata=None, tlv_records=None): sends a keysend payment with the specified parameters
-
-- pay_invoice(invoice, description, internal_id, amount=None): pays an invoice with the specified parameters.
-
-- & much more!
+The Project class has all available endpoints for the (ZBD API)[https://docs.zebedee.io/api/intro]. 
 
 ## example usage
 Install the package using:
 `pip install zebedee`
 
 Now you're ready to get started!
+
+Here's example code.
 
 ```
 from zebedee import *

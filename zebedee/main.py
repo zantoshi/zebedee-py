@@ -2,37 +2,29 @@ import requests, json, math
 
 class Project:
 
-    '''
-        This is the ZEBEDEE API library for python programmers.
-        The full api reference available at https://api-reference.zebedee.io/
-        Documentation is available at https://docs.zebedee.io .
-    '''
-
-    '''
-        The goal of this library is to increase at which developers are able to deliver lightning payment solutions.
-    '''
-
-    def __init__(self, apikey, callback_url = ""):
+    def __init__(self, apikey, callback_url=""):
         self.apikey = apikey
         self.callback_url = callback_url
 
-    def __str__(self):
-        return "ZEBEDEE Project Object"
+    def handle_request(self, method, url, headers, payload=None):
+        response = method(url, headers=headers, data=payload)
 
-    '''
-        Charge Actions
-    '''
+        try:
+            response_json = response.json()
+
+            if response.status_code != 200:
+                raise ValueError(f"Request failed with status code: {response.status_code}")
+
+            return response_json["data"]
+        except Exception as e:
+            raise RuntimeError(f"An error occurred: {e}, Response: {response.text}")
 
     def get_wallet_details(self):
         URL = 'https://api.zebedee.io/v0/wallet'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]
-        except:
-            return requests.get(URL, headers=heads).json()
+        return self.handle_request(requests.get, URL, heads)
 
-        
-    def create_charge(self, amount_of_seconds_to_expire_after, amount_msats, description, internal_id = None):
+    def create_charge(self, amount_of_seconds_to_expire_after, amount_msats, description, internal_id=None):
         URL = 'https://api.zebedee.io/v0/charges'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
@@ -43,26 +35,14 @@ class Project:
             "internalId": internal_id,
             "callbackUrl": self.callback_url
         })
-        try:
-            return requests.post(URL, headers=heads, data=payload).json()["data"]
-        except:
-            return requests.post(URL, headers=heads, data=payload).json()
+        return self.handle_request(requests.post, URL, heads, payload)
 
-        
     def get_charge_details(self, zbd_id):
         URL = f'https://api.zebedee.io/v0/charges/{zbd_id}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]
-        except:
-            return requests.get(URL, headers=heads).json()
+        return self.handle_request(requests.get, URL, heads)
 
-
-    '''
-        Static Charge Actions
-    '''
-
-    def create_static_charge(self,  min_amount_msats, max_amount_msats, description, internal_id, success_message, allowed_slots=None):
+    def create_static_charge(self, min_amount_msats, max_amount_msats, description, success_message, internal_id=None, allowed_slots=None):
         URL = 'https://api.zebedee.io/v0/static-charges'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
@@ -75,14 +55,9 @@ class Project:
             "callbackUrl": self.callback_url,
             "successMessage": success_message
         })
-        try:
-            return requests.post(URL, headers=heads, data=payload).json()["data"]
-        except:
-            return requests.post(URL, headers=heads, data=payload).json()
+        return self.handle_request(requests.post, URL, heads, payload)
 
-        
-
-    def update_static_charge_details(self, id, min_amount_msats, max_amount_msats, description, success_message, allowed_slots = None):
+    def update_static_charge_details(self, id, min_amount_msats, max_amount_msats, description, success_message, allowed_slots=None):
         url = f"https://api.zebedee.io/v0/static-charges/{id}"
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
         payload = {
@@ -93,27 +68,14 @@ class Project:
             "callbackUrl": self.callback_url,
             "successMessage": success_message
         }
-        try:
-            return requests.patch(url, headers=heads, data=json.dumps(payload)).json()["data"]
-        except:
-            return requests.patch(url, headers=heads, data=json.dumps(payload)).json()
-
-
+        return self.handle_request(requests.patch, url, heads, json.dumps(payload))
 
     def get_static_charge_details(self, zbd_id):
         URL = f'https://api.zebedee.io/v0/static-charges/{zbd_id}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]
-        except:
-            return requests.get(URL, headers=heads).json()
+        return self.handle_request(requests.get, URL, heads)
 
-
-    '''
-        Withdrawal Request Actions
-    '''
-
-    def create_withdrawal_request(self, amount_of_seconds_to_expire_after, amount_msats, description, internal_id):
+    def create_withdrawal_request(self, amount_of_seconds_to_expire_after, amount_msats, description, internal_id=None):
         URL = 'https://api.zebedee.io/v0/withdrawal-requests'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
@@ -124,25 +86,14 @@ class Project:
             "internalId": internal_id,
             "callbackUrl": self.callback_url
         })
-        try:
-            return requests.post(URL, headers=heads, data=payload).json()["data"]
-        except:
-            return requests.post(URL, headers=heads, data=payload).json()
+        return self.handle_request(requests.post, URL, heads, payload)
 
-        
     def get_withdrawal_request_details(self, zbd_id):
         URL = f'https://api.zebedee.io/v0/withdrawal-requests/{zbd_id}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]
-        except:
-            return requests.get(URL, headers=heads).json()
+        return self.handle_request(requests.get, URL, heads)
 
-
-    '''
-        Keysend Payment Action
-    '''
-    def send_keysend_payment(self, public_key, amount_msats, metadata = None, tlv_records = None):
+    def send_keysend_payment(self, public_key, amount_msats, metadata=None, tlv_records=None):
         URL = 'https://api.zebedee.io/v0/keysend-payment'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
@@ -153,17 +104,9 @@ class Project:
             "metadata": metadata,
             "callbackUrl": f"{self.callback_url}"
         })
-        try:
-            return requests.post(URL, headers=heads, data=payload).json()["data"]
-        except:
-            return requests.post(URL, headers=heads, data=payload).json()
+        return self.handle_request(requests.post, URL, heads, payload)
 
-
-    '''
-        Invoice Payment Actions
-    '''
-
-    def pay_invoice(self, invoice, description, internal_id, amount = None):
+    def pay_invoice(self, invoice, description, internal_id=None, amount=None):
         URL = 'https://api.zebedee.io/v0/payments'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
@@ -182,53 +125,31 @@ class Project:
                 "invoice": invoice,
                 "callbackUrl": self.callback_url
             })
-        try:
-            return requests.post(URL, headers=heads, data=payload).json()["data"]
-        except:
-            return requests.post(URL, headers=heads, data=payload).json()
-
+        return self.handle_request(requests.post, URL, heads, payload)
 
     def get_payment_details(self, zbd_id):
         URL = f'https://api.zebedee.io/v0/payments/{zbd_id}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]
-        except:
-            return requests.get(URL, headers=heads).json()
-
-    '''
-        Lightning Address Actions
-    '''
+        return self.handle_request(requests.get, URL, heads)
 
     def validate_lightning_address(self, lightning_address):
         URL = f'https://api.zebedee.io/v0/ln-address/validate/{lightning_address}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]
-        except:
-            return requests.get(URL, headers=heads).json()
+        return self.handle_request(requests.get, URL, heads)
 
-    
-    def send_payment_to_lightning_address(self, lightning_address, amount_msats, comment, internal_id):
+    def send_payment_to_lightning_address(self, lightning_address, amount_msats, comment, internal_id=None):
         URL = 'https://api.zebedee.io/v0/ln-address/send-payment'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
         payload = json.dumps({
             "lnAddress": "santos@zbd.gg",
             "amount": str(amount_msats),
-            "unit" : "msats",
+            "unit": "msats",
             "comment": comment,
             "callbackUrl": self.callback_url,
             "internalId": internal_id
         })
-        res = requests.post(URL, headers=heads, data=payload).json()
-        try:
-            return res["data"]
-        except:
-            return res
-        
-
-        
+        return self.handle_request(requests.post, URL, heads, payload)
 
     def fetch_charge_from_lightning_address(self, lightning_address, amount_msats, description):
         URL = 'https://api.zebedee.io/v0/ln-address/fetch-charge'
@@ -240,13 +161,7 @@ class Project:
             "description": description
         })
 
-        try:
-            return requests.post(URL, headers=heads, data=payload).json()["data"]
-        except:
-            return requests.post(URL, headers=heads, data=payload).json()
-    '''
-        Gamertag Actions
-    '''
+        return self.handle_request(requests.post, URL, heads, payload)
 
     def send_payment_to_gamertag(self, gamertag, amount_msats, description):
         URL = 'https://api.zebedee.io/v0/gamertag/send-payment'
@@ -257,40 +172,24 @@ class Project:
             "amount": str(amount_msats),
             "description": description
         })
-        try:
-            return requests.post(URL, headers=heads, data=payload).json()["data"]
-        except:
-            return requests.post(URL, headers=heads, data=payload).json()
-
+        return self.handle_request(requests.post, URL, heads, payload)
 
     def get_gamertag_transaction_details(self, zbd_id):
         URL = f'https://api.zebedee.io/v0/gamertag/transaction/{zbd_id}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]
-        except:
-            return requests.get(URL, headers=heads).json()
-
+        return self.handle_request(requests.get, URL, heads)
 
     def get_user_id_from_gamertag(self, gamertag):
         URL = f'https://api.zebedee.io/v0/user-id/gamertag/{gamertag}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]["id"]
-        except:
-            return requests.get(URL, headers=heads).json()
-
+        return self.handle_request(requests.get, URL, heads)["id"]
 
     def get_gamertag_from_user_id(self, user_id):
         URL = f'https://api.zebedee.io/v0/gamertag/user-id/{user_id}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]["gamertag"]
-        except:
-            return requests.get(URL, headers=heads).json()
+        return self.handle_request(requests.get, URL, heads)["gamertag"]
 
-
-    def fetch_charge_from_gamertag(self, gamertag, amount_msats, description, internal_id):
+    def fetch_charge_from_gamertag(self, gamertag, amount_msats, description, internal_id=None):
         URL = 'https://api.zebedee.io/v0/gamertag/charges'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
@@ -301,41 +200,23 @@ class Project:
             "callbackUrl": self.callback_url,
             "internalId": internal_id
         })
-        try:
-            return requests.post(URL, headers=heads, data=payload).json()["data"]
-        except:
-            return requests.post(URL, headers=heads, data=payload).json()
+        return self.handle_request(requests.post, URL, heads, payload)
 
-
-    '''
-        Util Actions
-    '''
     def is_supported_region(self, ip):
         URL = f'https://api.zebedee.io/v0/is-supported-region/{ip}'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]
-        except:
-            return requests.get(URL, headers=heads).json()
+        return self.handle_request(requests.get, URL, heads)
 
     def get_zbd_prod_server_ip(self):
         URL = f'https://api.zebedee.io/v0/prod-ips'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]
-        except:
-            return requests.get(URL, headers=heads).json()
-
+        return self.handle_request(requests.get, URL, heads)
 
     def get_btc_usd_quote_price(self):
         URL = 'https://api.zebedee.io/v0/btcusd'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        try:
-            return requests.get(URL, headers=heads).json()["data"]["btcUsdPrice"]
-        except:
-            return requests.get(URL, headers=heads).json()
+        return self.handle_request(requests.get, URL, heads)["btcUsdPrice"]
 
-    
     def convert_usd_to_sats(self, usd_amount):
         btc_price = self.get_btc_usd_quote_price()
         sats_amount = math.floor(round(int(usd_amount) / int(btc_price), 8) * 100000000)
@@ -347,23 +228,17 @@ class Project:
     def convert_sats_to_msats(self, amount_msats):
         return str(amount_msats) + "000"
 
-    def transfer_zbd_funds(self, amount_msats, recevier_wallet_id):
+    def transfer_zbd_funds(self, amount_msats, receiver_wallet_id):
         URL = 'https://api.zebedee.io/v0/internal-transfer'
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
 
         payload = json.dumps({
             "amount": str(amount_msats),
-            "receiverWalletId": recevier_wallet_id
+            "receiverWalletId": receiver_wallet_id
         })
-        try:
-            return requests.post(URL, headers=heads, data=payload).json()["data"]
-        except:
-            return requests.post(URL, headers=heads, data=payload).json()
+        return self.handle_request(requests.post, URL, heads, payload)
 
-    
     def get_static_charge_metadata(self, id):
         url = f"https://api.zebedee.io/v0/request-static-charges/{id}"
         heads = {'Content-Type': 'application/json', 'apikey': self.apikey}
-        res = requests.get(url, headers=heads).json()
-        return res
-
+        return self.handle_request(requests.get, url, heads)
