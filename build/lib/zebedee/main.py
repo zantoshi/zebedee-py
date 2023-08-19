@@ -225,8 +225,8 @@ class Project:
     def convert_msats_to_sats(self, amount_msats):
         return str(math.floor(int(amount_msats) / 1000))
 
-    def convert_sats_to_msats(self, amount_sats):
-        return str(amount_sats) + "000"
+    def convert_sats_to_msats(self, amount_msats):
+        return str(amount_msats) + "000"
 
     def transfer_zbd_funds(self, amount_msats, receiver_wallet_id):
         URL = 'https://api.zebedee.io/v0/internal-transfer'

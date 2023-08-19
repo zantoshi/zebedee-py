@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.9'
+VERSION = '0.1.1'
 DESCRIPTION = 'Move Money at the Speed of the Internet '
 LONG_DESCRIPTION = 'A package that allows for faster integration of the ZEBEDEE API.'
 
@@ -16,7 +16,7 @@ setup(
     name="zebedee",
     version=VERSION,
     author="zantoshi (Santos Hernandez)",
-    author_email="<santosdhernandez@gmail.com>",
+    author_email="<santos@zebedee.io>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=long_description,
